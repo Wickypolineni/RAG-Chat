@@ -7,6 +7,12 @@ import { cn } from '@/lib/utils'
 import type { Metadata, Viewport } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
+import {
+  ClerkProvider,
+  SignIn,
+  SignedIn,
+  SignedOut
+} from '@clerk/nextjs'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -45,24 +51,46 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const enableSaveChatHistory =
-    process.env.ENABLE_SAVE_CHAT_HISTORY === 'true'
+  const enableSaveChatHistory = process.env.ENABLE_SAVE_CHAT_HISTORY === 'true'
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn('font-sans antialiased', fontSans.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          {enableSaveChatHistory && <Sidebar />}
-          <Footer />
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          formButtonPrimary:
+            'bg-primary text-primary-foreground hover:bg-primary/90',
+          card: 'bg-background',
+          headerTitle: 'text-foreground',
+          headerSubtitle: 'text-muted-foreground',
+          socialButtonsBlockButton:
+            'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+          formFieldLabel: 'text-foreground',
+          footerActionLink: 'text-primary hover:text-primary/90'
+        }
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body className={cn('font-sans antialiased min-h-screen flex flex-col', fontSans.variable)}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <main className="flex-1 flex items-center justify-center">
+              <SignedOut>
+                <SignIn routing="hash" />
+              </SignedOut>
+              <SignedIn>
+                {children}
+                {enableSaveChatHistory && <Sidebar />}
+              </SignedIn>
+            </main>
+            <Footer />
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
