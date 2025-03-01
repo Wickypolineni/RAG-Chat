@@ -9,12 +9,12 @@ function IconLogo({ className, ...props }: React.ComponentProps<'svg'>) {
       viewBox="0 0 256 256"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn('h-4 w-4', className)}
       {...props}
     >
-      <circle cx="128" cy="128" r="128" fill="black"></circle>
-      <circle cx="102" cy="128" r="18" fill="white"></circle>
-      <circle cx="154" cy="128" r="18" fill="white"></circle>
+      <circle cx="128" cy="128" r="128" fill="black" />
+      {/* Magnifying Glass */}
+      <circle cx="115" cy="115" r="35" fill="none" stroke="white" strokeWidth="12" />
+      <line x1="140" y1="140" x2="170" y2="170" stroke="white" strokeWidth="12" strokeLinecap="round" />
     </svg>
   )
 }
